@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事業継続計画（BCP）策定アプリ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #f3e5f5 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1a237e;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .progress-section {
+            margin-bottom: 2rem;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2196f3, #9c27b0);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .step-title {
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .step-title h2 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .step-title p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2196f3;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #0d47a1;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #1b5e20;
+        }
+
+        .alert h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .alert ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .alert li {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #f5f5f5;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.75rem;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-item:hover {
+            background: #f5f5f5;
+        }
+
+        .radio-item input[type="radio"] {
+            margin-top: 0.25rem;
+            margin-right: 0.75rem;
+            cursor: pointer;
+        }
+
+        .radio-content {
+            flex: 1;
+        }
+
+        .radio-content .title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .radio-content .desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .org-section {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .org-section h4 {
+            color: #1565c0;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .org-section p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.75rem;
+        }
+
+        .org-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .org-inputs .input-wrapper label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .org-inputs input {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .stockpile-table {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .stockpile-header {
+            background: #f5f5f5;
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 2fr 0.5fr;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .stockpile-row {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 2fr 0.5fr;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .stockpile-row:last-child {
+            border-bottom: none;
+        }
+
+        .stockpile-row .item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .stockpile-row .value {
+            color: #2196f3;
+            font-weight: 600;
+        }
+
+        .stockpile-row input {
+            padding: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .stockpile-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #d0d0d0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2196f3, #9c27b0);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .btn-success:hover:not(:disabled) {
+            box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .step-navigator {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .step-nav-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .step-nav-btn.current {
+            background: #2196f3;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .step-nav-btn.completed {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .step-nav-btn.pending {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .step-nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .inline-inputs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .inline-inputs input {
+            width: 80px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .org-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .stockpile-header,
+            .stockpile-row {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+
+            .stockpile-header {
+                display: none;
+            }
+
+            .stockpile-row > div::before {
+                content: attr(data-label);
+                font-weight: 600;
+                margin-right: 0.5rem;
+            }
+
+            .step-navigator {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>事業継続計画（BCP）策定アプリ</h1>
+            <p style="font-size: 1.2rem; color: #1565c0; font-weight: 600; margin-bottom: 0.5rem;">自然災害対策版</p>
+            <p>ステップに沿って入力するだけで、事業継続計画書を作成できます</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>ステップ <span id="current-step">1</span> / <span id="total-steps">10</span></span>
+                <span id="progress-percent">10% 完了</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar" style="width: 10%"></div>
+            </div>
+            <div class="step-title">
+                <h2 id="step-title"></h2>
+                <p id="step-desc"></p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="card" id="step-content"></div>
+
+        <!-- Navigation Buttons -->
+        <div class="buttons">
+            <button class="btn btn-secondary" id="prev-btn" onclick="previousStep()">
+                ← 前へ
+            </button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextStep()">
+                次へ →
+            </button>
+            <button class="btn btn-success" id="txt-btn" onclick="exportTXT()" style="display: none;">
+                📝 TXT出力
+            </button>
+        </div>
+
+        <!-- Step Navigator -->
+        <div class="step-navigator" id="step-navigator"></div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>このアプリは事業継続計画(BCP)の策定を支援することを目的としています</p>
+        </div>
+    </div>
+
+    <script>
+        // グローバル変数
+        let currentStep = 0;
+        const formData = {
+            companyName: '',
+            address: '',
+            continuityGoal: '',
+            hazards: {
+                earthquake: false,
+                tsunami: false,
+                flood: false,
+                internalFlood: false,
+                landslide: false,
+                liquefaction: false,
+                other: false,
+                otherText: ''
+            },
+            triggerConditions: {
+                earthquakeLevel: '5弱',
+                floodWarning: '警戒レベル4',
+                other: ''
+            },
+            organization: {
+                president: { name: '', deputy: '' },
+                infoOfficer: { name: '', deputy: '' },
+                supplyOfficer: { name: '', deputy: '' },
+                budgetOfficer: { name: '', deputy: '' },
+                fieldOfficer: { name: '', deputy: '' },
+                specialOfficer: { name: '', deputy: '' }
+            },
+            emergencyMembers: '',
+            workingHours: {
+                duringWork: 'standard',
+                afterHours: 'standard',
+                customRule: ''
+            },
+            stockpile: {
+                water: { perPerson: 9, total: 0, location: '', completed: false },
+                food: { perPerson: 9, total: 0, location: '', completed: false },
+                toilet: { perPerson: 15, total: 0, location: '', completed: false }
+            },
+            employeeCount: 0,
+            trainingMonth: '',
+            stockCheckMonth: '',
+            insurance: {
+                fire: false,
+                earthquake: false,
+                business: false,
+                accident: false,
+                welfare: false,
+                life: false,
+                other: ''
+            },
+            evacuation: {
+                alternateLocation: '',
+                evacuationSite: '',
+                shelter: ''
+            },
+            contractors: '',
+            contactMethods: {
+                email: false,
+                sns: false,
+                phone: false,
+                other: ''
+            },
+            continuityPolicy: '',
+            nextReview: { year: '', month: '' }
+        };
+
+        const steps = [
+            { id: 0, title: '基本情報', desc: '企業名と所在地を入力' },
+            { id: 1, title: '事業継続目標', desc: '優先的に継続すべき事業' },
+            { id: 2, title: '災害リスク', desc: 'ハザードマップの確認' },
+            { id: 3, title: 'BCP発動条件', desc: '発動基準の設定' },
+            { id: 4, title: '組織体制', desc: '緊急時の体制構築' },
+            { id: 5, title: '出社・帰宅体制', desc: '発災時の行動ルール' },
+            { id: 6, title: '備蓄物資', desc: '従業者数と備蓄計画' },
+            { id: 7, title: '訓練・保険', desc: '事前対策の計画' },
+            { id: 8, title: '避難・委託先', desc: '避難場所と取引先情報' },
+            { id: 9, title: '連絡方法・方針', desc: '最終確認' }
+        ];
+
+        // 初期化
+        function init() {
+            renderStepNavigator();
+            renderStep();
+        }
+
+        // ステップナビゲーターを描画
+        function renderStepNavigator() {
+            const navigator = document.getElementById('step-navigator');
+            navigator.innerHTML = steps.map(step => `
+                <button class="step-nav-btn ${step.id === currentStep ? 'current' : step.id < currentStep ? 'completed' : 'pending'}" 
+                        onclick="goToStep(${step.id})">
+                    ${step.id + 1}. ${step.title}
+                </button>
+            `).join('');
+        }
+
+        // ステップを描画
+        function renderStep() {
+            const step = steps[currentStep];
+            document.getElementById('current-step').textContent = currentStep + 1;
+            document.getElementById('total-steps').textContent = steps.length;
+            document.getElementById('step-title').textContent = step.title;
+            document.getElementById('step-desc').textContent = step.desc;
+            
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            document.getElementById('progress-percent').textContent = Math.round(progress) + '% 完了';
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            document.getElementById('prev-btn').disabled = currentStep === 0;
+            document.getElementById('next-btn').style.display = currentStep === steps.length - 1 ? 'none' : 'inline-flex';
+            document.getElementById('txt-btn').style.display = currentStep === steps.length - 1 ? 'inline-flex' : 'none';
+
+            const content = document.getElementById('step-content');
+            content.innerHTML = getStepContent(currentStep);
+            
+            renderStepNavigator();
+            
+            // イベントリスナーを再設定
+            attachEventListeners();
+        }
+
+        // ステップのコンテンツを取得
+        function getStepContent(stepIndex) {
+            switch(stepIndex) {
+                case 0:
+                    return `
+                        <div class="form-group">
+                            <label>企業名・屋号・工場名など</label>
+                            <input type="text" id="companyName" value="${formData.companyName}" 
+                                   placeholder="例：株式会社サンプル">
+                        </div>
+                        <div class="form-group">
+                            <label>所在地</label>
+                            <input type="text" id="address" value="${formData.address}" 
+                                   placeholder="例：東京都千代田区丸の内1-1-1">
+                        </div>
+                        <div class="alert alert-info">
+                            <p>次のステップで、お住まいの地域のハザードマップを確認いただきます。事前に国土交通省のハザードマップポータルサイトなどでご確認いただくとスムーズです。</p>
+                        </div>
+                    `;
+
+                case 1:
+                    return `
+                        <div class="alert alert-warning">
+                            <h3>事業継続目標とは</h3>
+                            <p>企業の存続及び供給責任の観点から、優先的に復旧・継続すべき事業に対する具体的な目標（製品・サービスの供給量など定量的な目標）のことです。</p>
+                            <p style="margin-top: 0.5rem;"><strong>目標設定のポイント：</strong></p>
+                            <ul>
+                                <li>人命に関わる事業や社会機能維持に関わる事業</li>
+                                <li>売上や利益が大部分を占めている製品・サービス</li>
+                                <li>取引先から緊急時の供給責任が求められる事業</li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label>事業継続目標</label>
+                            <textarea id="continuityGoal" rows="6" 
+                                      placeholder="例：主力製品Aの生産を災害後3日以内に通常の50%、7日以内に80%まで回復させる">${formData.continuityGoal}</textarea>
+                        </div>
+                    `;
+
+                case 2:
+                    return `
+                        <div class="alert alert-info">
+                            <h3>ハザードマップの確認</h3>
+                            <p>国土交通省のハザードマップポータルサイトで、事業所所在地の災害リスクを確認してください。</p>
+                            <p style="margin-top: 0.5rem;">
+                                <a href="https://disaportal.gsi.go.jp/" target="_blank" style="color: #1565c0; text-decoration: underline;">
+                                    ハザードマップポータルサイト →
+                                </a>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label>当社所在地で発生しうる災害リスク（該当するものをチェック）</label>
+                            <div class="checkbox-grid">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hazard-earthquake" ${formData.hazards.earthquake ? 'checked' : ''}>
+                                    <label for="hazard-earthquake">地震</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hazard-tsunami" ${formData.hazards.tsunami ? 'checked' : ''}>
+                                    <label for="hazard-tsunami">津波</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hazard-flood" ${formData.hazards.flood ? 'checked' : ''}>
+                                    <label for="hazard-flood">洪水・高潮（外水氾濫）</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hazard-internalFlood" ${formData.hazards.internalFlood ? 'checked' : ''}>
+                                    <label for="hazard-internalFlood">内水氾濫</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hazard-landslide" ${formData.hazards.landslide ? 'checked' : ''}>
+                                    <label for="hazard-landslide">土砂災害</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hazard-liquefaction" ${formData.hazards.liquefaction ? 'checked' : ''}>
+                                    <label for="hazard-liquefaction">液状化</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hazard-other" ${formData.hazards.other ? 'checked' : ''}>
+                                <label for="hazard-other">その他</label>
+                            </div>
+                            <input type="text" id="hazard-otherText" value="${formData.hazards.otherText}" 
+                                   placeholder="その他の災害リスクを入力" 
+                                   style="margin-top: 0.5rem; display: ${formData.hazards.other ? 'block' : 'none'};">
+                        </div>
+                    `;
+
+                case 3:
+                    const hasEarthquake = formData.hazards.earthquake;
+                    const hasFlood = formData.hazards.flood || formData.hazards.internalFlood || formData.hazards.landslide;
+                    
+                    return `
+                        <div class="alert alert-info">
+                            <h3>BCP発動条件の設定</h3>
+                            <p>確認した災害リスクに基づいて、BCPを発動する具体的な条件を設定します。</p>
+                        </div>
+                        ${hasEarthquake ? `
+                            <div class="form-group">
+                                <label>地震の発動条件</label>
+                                <select id="trigger-earthquake">
+                                    <option value="5弱" ${formData.triggerConditions.earthquakeLevel === '5弱' ? 'selected' : ''}>震度5弱以上を観測した場合</option>
+                                    <option value="5強" ${formData.triggerConditions.earthquakeLevel === '5強' ? 'selected' : ''}>震度5強以上を観測した場合</option>
+                                    <option value="6弱" ${formData.triggerConditions.earthquakeLevel === '6弱' ? 'selected' : ''}>震度6弱以上を観測した場合</option>
+                                    <option value="6強" ${formData.triggerConditions.earthquakeLevel === '6強' ? 'selected' : ''}>震度6強以上を観測した場合</option>
+                                    <option value="7" ${formData.triggerConditions.earthquakeLevel === '7' ? 'selected' : ''}>震度7を観測した場合</option>
+                                </select>
+                            </div>
+                        ` : ''}
+                        ${hasFlood ? `
+                            <div class="form-group">
+                                <label>水害・土砂災害の発動条件</label>
+                                <select id="trigger-flood">
+                                    <option value="警戒レベル3" ${formData.triggerConditions.floodWarning === '警戒レベル3' ? 'selected' : ''}>警戒レベル3「高齢者等避難」</option>
+                                    <option value="警戒レベル4" ${formData.triggerConditions.floodWarning === '警戒レベル4' ? 'selected' : ''}>警戒レベル4「避難指示」</option>
+                                </select>
+                                <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                                    警戒レベル3：高齢者等は避難、警戒レベル4：危険な場所から全員避難
+                                </p>
+                            </div>
+                        ` : ''}
+                        <div class="form-group">
+                            <label>その他の発動条件</label>
+                            <textarea id="trigger-other" rows="3" 
+                                      placeholder="例：津波警報発令時、主要取引先の被災時など">${formData.triggerConditions.other}</textarea>
+                        </div>
+                    `;
+
+                case 4:
+                    return `
+                        <div class="alert alert-success">
+                            <h3>緊急時の組織体制</h3>
+                            <p>災害発生時に迅速に対応できるよう、各役割の担当者と副担当者を決めておきます。</p>
+                        </div>
+                        
+                        <div class="org-section">
+                            <h4>社長（司令塔）</h4>
+                            <div class="org-inputs">
+                                <div class="input-wrapper">
+                                    <label>担当者</label>
+                                    <input type="text" id="org-president-name" value="${formData.organization.president.name}" placeholder="氏名">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label>副担当者（代理）</label>
+                                    <input type="text" id="org-president-deputy" value="${formData.organization.president.deputy}" placeholder="氏名">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="org-section">
+                            <h4>情報担当責任者</h4>
+                            <p>災害・被害情報の収集と発信</p>
+                            <div class="org-inputs">
+                                <div class="input-wrapper">
+                                    <label>担当者</label>
+                                    <input type="text" id="org-info-name" value="${formData.organization.infoOfficer.name}" placeholder="氏名">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label>副担当者</label>
+                                    <input type="text" id="org-info-deputy" value="${formData.organization.infoOfficer.deputy}" placeholder="氏名">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="org-section">
+                            <h4>供給担当責任者</h4>
+                            <p>取引先・消費者への供給責任対応</p>
+                            <div class="org-inputs">
+                                <div class="input-wrapper">
+                                    <label>担当者</label>
+                                    <input type="text" id="org-supply-name" value="${formData.organization.supplyOfficer.name}" placeholder="氏名">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label>副担当者</label>
+                                    <input type="text" id="org-supply-deputy" value="${formData.organization.supplyOfficer.deputy}" placeholder="氏名">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="org-section">
+                            <h4>予算担当責任者</h4>
+                            <p>復旧費用・資金繰りの管理</p>
+                            <div class="org-inputs">
+                                <div class="input-wrapper">
+                                    <label>担当者</label>
+                                    <input type="text" id="org-budget-name" value="${formData.organization.budgetOfficer.name}" placeholder="氏名">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label>副担当者</label>
+                                    <input type="text" id="org-budget-deputy" value="${formData.organization.budgetOfficer.deputy}" placeholder="氏名">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="org-section">
+                            <h4>現場担当責任者</h4>
+                            <p>初動対応・安否確認・復旧対策</p>
+                            <div class="org-inputs">
+                                <div class="input-wrapper">
+                                    <label>担当者</label>
+                                    <input type="text" id="org-field-name" value="${formData.organization.fieldOfficer.name}" placeholder="氏名">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label>副担当者</label>
+                                    <input type="text" id="org-field-deputy" value="${formData.organization.fieldOfficer.deputy}" placeholder="氏名">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="org-section">
+                            <h4>特命担当責任者（任意）</h4>
+                            <p>法務等、特別な対応が必要な場合に選任</p>
+                            <div class="org-inputs">
+                                <div class="input-wrapper">
+                                    <label>担当者</label>
+                                    <input type="text" id="org-special-name" value="${formData.organization.specialOfficer.name}" placeholder="氏名">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label>副担当者</label>
+                                    <input type="text" id="org-special-deputy" value="${formData.organization.specialOfficer.deputy}" placeholder="氏名">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>就業時間外発災時の参集メンバー</label>
+                            <textarea id="emergency-members" rows="3" 
+                                      placeholder="例：上記担当者に加え、会社に速やかに参集できるメンバー（氏名を記入）">${formData.emergencyMembers}</textarea>
+                        </div>
+                    `;
+
+                case 5:
+                    return `
+                        <div class="alert alert-warning">
+                            <h3>発災時の出社・帰宅体制</h3>
+                            <p>従業者の安全を最優先に、出社・帰宅時の行動ルールを設定します。</p>
+                        </div>
+
+                        <h4 style="margin-bottom: 1rem;">就業時間中に発災した場合</h4>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" name="during-work" id="during-standard" value="standard" ${formData.workingHours.duringWork === 'standard' ? 'checked' : ''}>
+                                <div class="radio-content">
+                                    <div class="title">標準ルール</div>
+                                    <div class="desc">出社時：原則、自宅待機又は自宅に戻る（職場に近い場合は職場へ）<br>
+                                    帰宅時：原則、職場内待機又は職場に戻る（自宅に近い場合は自宅へ）</div>
+                                </div>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="during-work" id="during-custom" value="custom" ${formData.workingHours.duringWork === 'custom' ? 'checked' : ''}>
+                                <div class="radio-content">
+                                    <div class="title">独自ルールを設定</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="margin: 1.5rem 0 1rem 0;">就業時間外に発災した場合（休日等）</h4>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" name="after-hours" id="after-standard" value="standard" ${formData.workingHours.afterHours === 'standard' ? 'checked' : ''}>
+                                <div class="radio-content">
+                                    <div class="title">標準ルール</div>
+                                    <div class="desc">自宅待機。身の安全を優先したうえで、参集メンバーは出社</div>
+                                </div>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="after-hours" id="after-custom" value="custom" ${formData.workingHours.afterHours === 'custom' ? 'checked' : ''}>
+                                <div class="radio-content">
+                                    <div class="title">独自ルールを設定</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="custom-rule-group" style="display: ${formData.workingHours.duringWork === 'custom' || formData.workingHours.afterHours === 'custom' ? 'block' : 'none'};">
+                            <label>自社独自ルール</label>
+                            <textarea id="custom-rule" rows="4" 
+                                      placeholder="自社の業務特性に応じた独自のルールを記入してください">${formData.workingHours.customRule}</textarea>
+                        </div>
+
+                        <div class="alert alert-warning" style="margin-top: 1rem;">
+                            <p style="font-size: 0.9rem;">※津波浸水想定区域に職場がある場合、津波警報・避難指示等が発令されたら、備蓄物資があっても高台に避難してください。人命の安全確保が最優先です。</p>
+                        </div>
+                    `;
+
+                case 6:
+                    return `
+                        <div class="alert alert-info">
+                            <h3>備蓄物資の計画</h3>
+                            <p>従業者1人あたり最低3日分の備蓄が目安です。災害被害が及ばない場所に保管してください。</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>従業者数（社長・役員・従業員・パート・アルバイト・派遣社員等）</label>
+                            <input type="number" id="employee-count" value="${formData.employeeCount}" placeholder="例：10" min="0">
+                        </div>
+
+                        <div class="stockpile-table">
+                            <div class="stockpile-header">
+                                <div>備蓄物資</div>
+                                <div>1人あたり</div>
+                                <div>必要量</div>
+                                <div>保管場所</div>
+                                <div>完了</div>
+                            </div>
+                            <div class="stockpile-row">
+                                <div class="item-name" data-label="備蓄物資: ">飲料水</div>
+                                <div data-label="1人あたり: ">${formData.stockpile.water.perPerson}リットル</div>
+                                <div class="value" data-label="必要量: " id="water-total">${formData.stockpile.water.total}リットル</div>
+                                <div data-label="保管場所: "><input type="text" id="water-location" value="${formData.stockpile.water.location}" placeholder="場所"></div>
+                                <div data-label="完了: " style="text-align: center;"><input type="checkbox" id="water-completed" ${formData.stockpile.water.completed ? 'checked' : ''}></div>
+                            </div>
+                            <div class="stockpile-row">
+                                <div class="item-name" data-label="備蓄物資: ">食料</div>
+                                <div data-label="1人あたり: ">${formData.stockpile.food.perPerson}食</div>
+                                <div class="value" data-label="必要量: " id="food-total">${formData.stockpile.food.total}食</div>
+                                <div data-label="保管場所: "><input type="text" id="food-location" value="${formData.stockpile.food.location}" placeholder="場所"></div>
+                                <div data-label="完了: " style="text-align: center;"><input type="checkbox" id="food-completed" ${formData.stockpile.food.completed ? 'checked' : ''}></div>
+                            </div>
+                            <div class="stockpile-row">
+                                <div class="item-name" data-label="備蓄物資: ">簡易トイレ</div>
+                                <div data-label="1人あたり: ">${formData.stockpile.toilet.perPerson}回</div>
+                                <div class="value" data-label="必要量: " id="toilet-total">${formData.stockpile.toilet.total}回</div>
+                                <div data-label="保管場所: "><input type="text" id="toilet-location" value="${formData.stockpile.toilet.location}" placeholder="場所"></div>
+                                <div data-label="完了: " style="text-align: center;"><input type="checkbox" id="toilet-completed" ${formData.stockpile.toilet.completed ? 'checked' : ''}></div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info" style="margin-top: 1rem;">
+                            <p><strong>共助の観点：</strong>帰宅困難者や地域に提供するため、1割増しの備蓄物資の確保に努めましょう。</p>
+                        </div>
+                    `;
+
+                case 7:
+                    return `
+                        <div class="alert alert-info">
+                            <h3>訓練・演習と保険</h3>
+                            <p>定期的な訓練と適切な保険加入で、事業継続力を高めます。</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>訓練・演習の実施時期</label>
+                            <div class="inline-inputs">
+                                <span>毎年</span>
+                                <input type="number" id="training-month" value="${formData.trainingMonth}" min="1" max="12" placeholder="月">
+                                <span>月に実施</span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                                連絡訓練、出社・帰宅訓練、シナリオ演習などを実施します。
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>備蓄物資の確認時期</label>
+                            <div class="inline-inputs">
+                                <span>毎年</span>
+                                <input type="number" id="stock-check-month" value="${formData.stockCheckMonth}" min="1" max="12" placeholder="月">
+                                <span>月に実施</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>保険・共済への加入状況</label>
+                            <p style="font-size: 0.85rem; color: #666; margin-bottom: 0.75rem;">
+                                休業補償・自然災害対策も必要です。水害による被害が補償されるか契約内容を確認してください。
+                            </p>
+                            <div class="checkbox-grid">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="insurance-fire" ${formData.insurance.fire ? 'checked' : ''}>
+                                    <label for="insurance-fire">火災保険</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="insurance-earthquake" ${formData.insurance.earthquake ? 'checked' : ''}>
+                                    <label for="insurance-earthquake">地震特約</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="insurance-business" ${formData.insurance.business ? 'checked' : ''}>
+                                    <label for="insurance-business">休業対応保険・共済</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="insurance-accident" ${formData.insurance.accident ? 'checked' : ''}>
+                                    <label for="insurance-accident">業務災害保険</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="insurance-welfare" ${formData.insurance.welfare ? 'checked' : ''}>
+                                    <label for="insurance-welfare">福祉共済</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="insurance-life" ${formData.insurance.life ? 'checked' : ''}>
+                                    <label for="insurance-life">生命保険</label>
+                                </div>
+                            </div>
+                            <input type="text" id="insurance-other" value="${formData.insurance.other}" 
+                                   placeholder="その他の保険" style="margin-top: 0.75rem;">
+                        </div>
+                    `;
+
+                case 8:
+                    return `
+                        <div class="alert alert-info">
+                            <h3>避難場所と委託先情報</h3>
+                            <p>職場の安全が保てない場合の避難先と、重要な取引先の情報を記録します。</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>代替拠点</label>
+                            <input type="text" id="alternate-location" value="${formData.evacuation.alternateLocation}" 
+                                   placeholder="例：第二工場（住所：○○市△△町1-2-3）">
+                        </div>
+
+                        <div class="form-group">
+                            <label>避難場所</label>
+                            <input type="text" id="evacuation-site" value="${formData.evacuation.evacuationSite}" 
+                                   placeholder="例：○○公園（災害種別：地震、津波）">
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                                災害種別によって個別に設定されている場合があります。
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>避難所</label>
+                            <input type="text" id="shelter" value="${formData.evacuation.shelter}" 
+                                   placeholder="例：○○小学校">
+                        </div>
+
+                        <div class="form-group">
+                            <label>主な委託先（仕入先・協力会社・運送会社・派遣会社等）</label>
+                            <p style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">
+                                相手方の事業が中断した場合に、自社の事業も中断してしまう重要な取引先を記入してください。
+                            </p>
+                            <textarea id="contractors" rows="5" 
+                                      placeholder="例：&#10;株式会社○○（仕入先）連絡先：03-xxxx-xxxx&#10;△△運送（運送会社）連絡先：06-xxxx-xxxx">${formData.contractors}</textarea>
+                        </div>
+                    `;
+
+                case 9:
+                    return `
+                        <div class="alert alert-success">
+                            <h3>連絡方法と事業継続方針</h3>
+                            <p>最後に、従業者間の連絡方法と事業継続の基本方針を設定します。</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>従業者間の連絡方法（複数選択可）</label>
+                            <div class="checkbox-grid" style="grid-template-columns: repeat(3, 1fr);">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="contact-email" ${formData.contactMethods.email ? 'checked' : ''}>
+                                    <label for="contact-email">メール</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="contact-sns" ${formData.contactMethods.sns ? 'checked' : ''}>
+                                    <label for="contact-sns">SNS（LINE等）</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="contact-phone" ${formData.contactMethods.phone ? 'checked' : ''}>
+                                    <label for="contact-phone">電話</label>
+                                </div>
+                            </div>
+                            <input type="text" id="contact-other" value="${formData.contactMethods.other}" 
+                                   placeholder="その他の連絡方法" style="margin-top: 0.75rem;">
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                                従業者のご家族同士も安否確認の方法を決めておくことが大切です。
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>事業継続方針</label>
+                            <textarea id="continuity-policy" rows="5" 
+                                      placeholder="例：従業者とその家族を守り、事業を継続させることで、地域・社会に貢献します。職場周辺の地域が行う災害訓練には積極的に参加し、災害発生時は救助・消火活動等に協力します。">${formData.continuityPolicy}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>見直し予定</label>
+                            <div class="inline-inputs">
+                                <span>次回</span>
+                                <input type="number" id="review-year" value="${formData.nextReview.year}" placeholder="年" style="width: 100px;">
+                                <span>年</span>
+                                <input type="number" id="review-month" value="${formData.nextReview.month}" min="1" max="12" placeholder="月">
+                                <span>月に見直します</span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                                事業や組織体制等に変更があった際は、少なくとも年に1回は見直しを行いましょう。
+                            </p>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <h3>✓ 入力完了</h3>
+                            <p>すべての項目の入力が完了しました。「TXT出力」ボタンをクリックして、事業継続計画書をダウンロードしてください。</p>
+                        </div>
+                    `;
+
+                default:
+                    return '';
+            }
+        }
+
+        // イベントリスナーを設定
+        function attachEventListeners() {
+            // 各ステップ固有のイベントリスナー
+            switch(currentStep) {
+                case 0:
+                    attachListener('companyName', v => formData.companyName = v);
+                    attachListener('address', v => formData.address = v);
+                    break;
+                case 1:
+                    attachListener('continuityGoal', v => formData.continuityGoal = v);
+                    break;
+                case 2:
+                    attachCheckboxListener('hazard-earthquake', v => formData.hazards.earthquake = v);
+                    attachCheckboxListener('hazard-tsunami', v => formData.hazards.tsunami = v);
+                    attachCheckboxListener('hazard-flood', v => formData.hazards.flood = v);
+                    attachCheckboxListener('hazard-internalFlood', v => formData.hazards.internalFlood = v);
+                    attachCheckboxListener('hazard-landslide', v => formData.hazards.landslide = v);
+                    attachCheckboxListener('hazard-liquefaction', v => formData.hazards.liquefaction = v);
+                    attachCheckboxListener('hazard-other', v => {
+                        formData.hazards.other = v;
+                        document.getElementById('hazard-otherText').style.display = v ? 'block' : 'none';
+                    });
+                    attachListener('hazard-otherText', v => formData.hazards.otherText = v);
+                    break;
+                case 3:
+                    if (document.getElementById('trigger-earthquake')) {
+                        attachListener('trigger-earthquake', v => formData.triggerConditions.earthquakeLevel = v);
+                    }
+                    if (document.getElementById('trigger-flood')) {
+                        attachListener('trigger-flood', v => formData.triggerConditions.floodWarning = v);
+                    }
+                    attachListener('trigger-other', v => formData.triggerConditions.other = v);
+                    break;
+                case 4:
+                    attachListener('org-president-name', v => formData.organization.president.name = v);
+                    attachListener('org-president-deputy', v => formData.organization.president.deputy = v);
+                    attachListener('org-info-name', v => formData.organization.infoOfficer.name = v);
+                    attachListener('org-info-deputy', v => formData.organization.infoOfficer.deputy = v);
+                    attachListener('org-supply-name', v => formData.organization.supplyOfficer.name = v);
+                    attachListener('org-supply-deputy', v => formData.organization.supplyOfficer.deputy = v);
+                    attachListener('org-budget-name', v => formData.organization.budgetOfficer.name = v);
+                    attachListener('org-budget-deputy', v => formData.organization.budgetOfficer.deputy = v);
+                    attachListener('org-field-name', v => formData.organization.fieldOfficer.name = v);
+                    attachListener('org-field-deputy', v => formData.organization.fieldOfficer.deputy = v);
+                    attachListener('org-special-name', v => formData.organization.specialOfficer.name = v);
+                    attachListener('org-special-deputy', v => formData.organization.specialOfficer.deputy = v);
+                    attachListener('emergency-members', v => formData.emergencyMembers = v);
+                    break;
+                case 5:
+                    const duringRadios = document.getElementsByName('during-work');
+                    duringRadios.forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            formData.workingHours.duringWork = radio.value;
+                            updateCustomRuleVisibility();
+                        });
+                    });
+                    const afterRadios = document.getElementsByName('after-hours');
+                    afterRadios.forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            formData.workingHours.afterHours = radio.value;
+                            updateCustomRuleVisibility();
+                        });
+                    });
+                    attachListener('custom-rule', v => formData.workingHours.customRule = v);
+                    break;
+                case 6:
+                    attachListener('employee-count', v => {
+                        formData.employeeCount = parseInt(v) || 0;
+                        calculateStockpile();
+                    });
+                    attachListener('water-location', v => formData.stockpile.water.location = v);
+                    attachCheckboxListener('water-completed', v => formData.stockpile.water.completed = v);
+                    attachListener('food-location', v => formData.stockpile.food.location = v);
+                    attachCheckboxListener('food-completed', v => formData.stockpile.food.completed = v);
+                    attachListener('toilet-location', v => formData.stockpile.toilet.location = v);
+                    attachCheckboxListener('toilet-completed', v => formData.stockpile.toilet.completed = v);
+                    break;
+                case 7:
+                    attachListener('training-month', v => formData.trainingMonth = v);
+                    attachListener('stock-check-month', v => formData.stockCheckMonth = v);
+                    attachCheckboxListener('insurance-fire', v => formData.insurance.fire = v);
+                    attachCheckboxListener('insurance-earthquake', v => formData.insurance.earthquake = v);
+                    attachCheckboxListener('insurance-business', v => formData.insurance.business = v);
+                    attachCheckboxListener('insurance-accident', v => formData.insurance.accident = v);
+                    attachCheckboxListener('insurance-welfare', v => formData.insurance.welfare = v);
+                    attachCheckboxListener('insurance-life', v => formData.insurance.life = v);
+                    attachListener('insurance-other', v => formData.insurance.other = v);
+                    break;
+                case 8:
+                    attachListener('alternate-location', v => formData.evacuation.alternateLocation = v);
+                    attachListener('evacuation-site', v => formData.evacuation.evacuationSite = v);
+                    attachListener('shelter', v => formData.evacuation.shelter = v);
+                    attachListener('contractors', v => formData.contractors = v);
+                    break;
+                case 9:
+                    attachCheckboxListener('contact-email', v => formData.contactMethods.email = v);
+                    attachCheckboxListener('contact-sns', v => formData.contactMethods.sns = v);
+                    attachCheckboxListener('contact-phone', v => formData.contactMethods.phone = v);
+                    attachListener('contact-other', v => formData.contactMethods.other = v);
+                    attachListener('continuity-policy', v => formData.continuityPolicy = v);
+                    attachListener('review-year', v => formData.nextReview.year = v);
+                    attachListener('review-month', v => formData.nextReview.month = v);
+                    break;
+            }
+        }
+
+        function attachListener(id, callback) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', e => callback(e.target.value));
+            }
+        }
+
+        function attachCheckboxListener(id, callback) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', e => callback(e.target.checked));
+            }
+        }
+
+        function updateCustomRuleVisibility() {
+            const group = document.getElementById('custom-rule-group');
+            if (group) {
+                const showCustom = formData.workingHours.duringWork === 'custom' || 
+                                  formData.workingHours.afterHours === 'custom';
+                group.style.display = showCustom ? 'block' : 'none';
+            }
+        }
+
+        function calculateStockpile() {
+            const count = formData.employeeCount;
+            formData.stockpile.water.total = count * 9;
+            formData.stockpile.food.total = count * 9;
+            formData.stockpile.toilet.total = count * 15;
+            
+            document.getElementById('water-total').textContent = formData.stockpile.water.total + 'リットル';
+            document.getElementById('food-total').textContent = formData.stockpile.food.total + '食';
+            document.getElementById('toilet-total').textContent = formData.stockpile.toilet.total + '回';
+        }
+
+        // ナビゲーション
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                renderStep();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function goToStep(stepIndex) {
+            currentStep = stepIndex;
+            renderStep();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // TXT出力
+        function exportTXT() {
+            const content = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+事業継続計画書（BCP）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+作成日: ${new Date().toLocaleDateString('ja-JP')}
+
+■ 1. 基本情報
+
+企業名・屋号: ${formData.companyName || '未入力'}
+所在地: ${formData.address || '未入力'}
+
+事業継続目標:
+${formData.continuityGoal || '未入力'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 2. ハザードマップから考えるBCP発動条件
+
+【当社所在地で発生しうる災害リスク】
+${[
+    formData.hazards.earthquake && '地震',
+    formData.hazards.tsunami && '津波',
+    formData.hazards.flood && '洪水・高潮',
+    formData.hazards.internalFlood && '内水氾濫',
+    formData.hazards.landslide && '土砂災害',
+    formData.hazards.liquefaction && '液状化',
+    formData.hazards.other && `その他（${formData.hazards.otherText}）`
+].filter(Boolean).join('、') || '未設定'}
+
+【BCP発動条件】
+・地震: 震度${formData.triggerConditions.earthquakeLevel}以上
+・水害・土砂災害: ${formData.triggerConditions.floodWarning}
+${formData.triggerConditions.other ? `・その他: ${formData.triggerConditions.other}` : ''}
+
+【従業者間の連絡方法】
+${[
+    formData.contactMethods.email && 'メール',
+    formData.contactMethods.sns && 'SNS（LINE等）',
+    formData.contactMethods.phone && '電話',
+    formData.contactMethods.other
+].filter(Boolean).join('、') || '未設定'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 3. BCPの発動時の組織体制
+
+社長（司令塔）: ${formData.organization.president.name || '未入力'}
+  代理: ${formData.organization.president.deputy || '未入力'}
+
+①情報担当責任者: ${formData.organization.infoOfficer.name || '未入力'}
+  副担当: ${formData.organization.infoOfficer.deputy || '未入力'}
+
+②供給担当責任者: ${formData.organization.supplyOfficer.name || '未入力'}
+  副担当: ${formData.organization.supplyOfficer.deputy || '未入力'}
+
+③予算担当責任者: ${formData.organization.budgetOfficer.name || '未入力'}
+  副担当: ${formData.organization.budgetOfficer.deputy || '未入力'}
+
+④現場担当責任者: ${formData.organization.fieldOfficer.name || '未入力'}
+  副担当: ${formData.organization.fieldOfficer.deputy || '未入力'}
+
+${formData.organization.specialOfficer.name ? `⑤特命担当責任者: ${formData.organization.specialOfficer.name}
+  副担当: ${formData.organization.specialOfficer.deputy || '未入力'}` : ''}
+
+${formData.emergencyMembers ? `
+【就業時間外発災時の参集メンバー】
+${formData.emergencyMembers}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 4. 発災時の出社・帰宅体制
+
+${formData.workingHours.duringWork === 'standard' && formData.workingHours.afterHours === 'standard' ? 
+`【原則ルール適用】
+（出社時）原則、自宅待機又は自宅に戻る。職場に近い場合は職場へ。
+（帰宅時）原則、職場内待機又は職場に戻る。自宅に近い場合は自宅へ。
+（就業時間外）自宅待機。身の安全を優先したうえで、参集メンバーは出社。` 
+: ''}
+
+${formData.workingHours.customRule ? `【自社独自ルール】
+${formData.workingHours.customRule}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 5. 減災の事前対策
+
+【備蓄物資】
+従業者数: ${formData.employeeCount}人
+
+飲料水: ${formData.stockpile.water.total}リットル / 保管場所: ${formData.stockpile.water.location || '未設定'} ${formData.stockpile.water.completed ? '✓' : '□'}
+食料: ${formData.stockpile.food.total}食 / 保管場所: ${formData.stockpile.food.location || '未設定'} ${formData.stockpile.food.completed ? '✓' : '□'}
+簡易トイレ: ${formData.stockpile.toilet.total}回 / 保管場所: ${formData.stockpile.toilet.location || '未設定'} ${formData.stockpile.toilet.completed ? '✓' : '□'}
+
+訓練・演習の実施: 毎年${formData.trainingMonth || '〇'}月
+備蓄物資の確認: 毎年${formData.stockCheckMonth || '〇'}月
+
+【保険共済への加入】
+${[
+    formData.insurance.fire && '火災保険',
+    formData.insurance.earthquake && '地震特約',
+    formData.insurance.business && '休業対応保険',
+    formData.insurance.accident && '業務災害保険',
+    formData.insurance.welfare && '福祉共済',
+    formData.insurance.life && '生命保険',
+    formData.insurance.other
+].filter(Boolean).join('、') || '未設定'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 6. 避難場所・避難所
+
+代替拠点: ${formData.evacuation.alternateLocation || '未入力'}
+避難場所: ${formData.evacuation.evacuationSite || '未入力'}
+避難所: ${formData.evacuation.shelter || '未入力'}
+
+${formData.contractors ? `
+【主な委託先】
+${formData.contractors}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 事業継続方針
+
+${formData.continuityPolicy || '未入力'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+次回見直し予定: ${formData.nextReview.year || '〇〇〇〇'}年${formData.nextReview.month || '〇〇'}月
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+
+            // BOM付きUTF-8でテキストファイルを作成
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const blob = new Blob([bom, content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'BCP計画書.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 初期化実行
+        init();
+    </script>
+</body>
+</html>
